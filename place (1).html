@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joy tafsilotlari — KUTMA</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="ilova">
+    <header class="sarlavha">
+      <a class="orqaga" href="index.html">← Orqaga</a>
+    </header>
+
+    <div class="joy-rasm" id="rasm">📍</div>
+
+    <section class="bolim">
+      <h2 id="nomi">...</h2>
+      <p class="izoh" id="malumot"></p>
+      <br>
+
+      <div class="bloklar">
+      <div class="blok">
+        <h3>Jonli bandlik <span id="boshJoy" class="kam"></span></h3>
+        <canvas id="grafik" height="140"></canvas>
+      </div>
+
+      <div class="blok">
+        <h3>Jonli menyu</h3>
+        <div id="menyu"></div>
+      </div>
+      </div>
+    </section>
+
+    <div class="pastki">
+      <a id="borish" class="tugma" target="_blank">
+        Hozir borish
+        <small>(Yo'lga chiqdim)</small>
+      </a>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    function bandlikDarajasi(foiz) {
+      if (foiz < 40) return { matn: "Kam", klass: "kam" };
+      if (foiz < 70) return { matn: "O'rtacha", klass: "ortacha" };
+      return { matn: "Ko'p", klass: "kop" };
+    }
+
+    // URL dan id ni olish: place.html?id=1
+    const id = Number(new URLSearchParams(location.search).get("id"));
+    const j = JOYLAR.find(x => x.id === id);
+
+    if (!j) {
+      document.getElementById("nomi").textContent = "Joy topilmadi";
+    } else {
+      const d = bandlikDarajasi(j.band);
+      const kat = KATEGORIYALAR.find(k => k.id === j.kategoriya);
+      document.title = j.nomi + " — KUTMA";
+      document.getElementById("rasm").textContent = kat.belgi;
+      document.getElementById("nomi").textContent = j.nomi;
+      document.getElementById("malumot").innerHTML =
+        `${kat.nomi} · ${j.ishVaqti}<br>📍 ${j.manzil}<br>Hozir bandlik: <b class="${d.klass}">${d.matn}</b>`;
+      document.getElementById("boshJoy").textContent = `● ${j.bosh} ta ${j.birlik}`;
+
+      // Menyu
+      document.getElementById("menyu").innerHTML = j.menyu.map(m => `
+        <div class="menyu-qator">
+          <span>${m.nomi} — ${m.narx.toLocaleString("uz")} so'm</span>
+          <span class="${m.bor ? "holat-bor" : "holat-yoq"}">${m.bor ? "● Bor" : "○ Qolmagan"}</span>
+        </div>`).join("");
+
+      // Bandlik grafigi
+      const soatlar = j.bandlik.map((_, i) => (10 + i) + ":00");
+      if (window.Chart) new Chart(document.getElementById("grafik"), {
+        type: "line",
+        data: {
+          labels: soatlar,
+          datasets: [{
+            label: "Bandlik %",
+            data: j.bandlik,
+            borderColor: "#0b7d5f",
+            backgroundColor: "rgba(11,125,95,.15)",
+            fill: true,
+            tension: .4
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { min: 0, max: 100 } }
+        }
+      });
+
+      // "Hozir borish" — Google Maps marshrut
+      document.getElementById("borish").href =
+        `https://www.google.com/maps/dir/?api=1&destination=${j.lat},${j.lng}`;
+    }
+  </script>
+</body>
+</html>
