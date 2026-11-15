@@ -1,0 +1,256 @@
+:root {
+  --yashil: #0b7d5f;
+  --yashil-toq: #075e47;
+  --yashil-och: #e6f4ef;
+  --sariq: #e0a800;
+  --qizil: #d9363e;
+  --kulrang: #6b7280;
+  --fon: #f3f7f5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--fon);
+  color: #1f2937;
+}
+
+.ilova {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #fff;
+  padding-bottom: 90px;
+}
+
+/* Sarlavha */
+.sarlavha {
+  background: var(--yashil);
+  color: #fff;
+  padding: 18px 16px 20px;
+  border-radius: 0 0 20px 20px;
+}
+.logo { font-size: 26px; font-weight: 800; letter-spacing: 2px; }
+.logo-izoh { font-size: 11px; opacity: .85; margin-bottom: 14px; }
+
+.qidiruv {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+}
+
+/* Bo'limlar */
+.bolim { padding: 16px; }
+.bolim h2 { font-size: 17px; margin-bottom: 12px; }
+
+/* Kategoriyalar */
+.kategoriyalar { display: flex; gap: 10px; overflow-x: auto; }
+.kategoriya {
+  flex: 0 0 80px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+.kategoriya .belgi {
+  width: 64px; height: 64px;
+  margin: 0 auto 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  background: var(--yashil-och);
+  border-radius: 16px;
+  border: 2px solid transparent;
+}
+.kategoriya.faol .belgi { border-color: var(--yashil); }
+
+/* Joy kartochkasi */
+.karta {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: .2s;
+}
+.karta:hover { border-color: var(--yashil); background: var(--yashil-och); }
+.karta-rasm {
+  width: 80px; height: 80px;
+  border-radius: 10px;
+  background: #e5e7eb;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px;
+  flex-shrink: 0;
+}
+.karta h3 { font-size: 16px; margin-bottom: 4px; }
+.karta .bosh { font-weight: 600; margin-bottom: 4px; }
+.karta .izoh { font-size: 13px; color: var(--kulrang); }
+
+.kam { color: var(--yashil); }
+.ortacha { color: var(--sariq); }
+.kop { color: var(--qizil); }
+
+/* Joy sahifasi */
+.orqaga { color: #fff; text-decoration: none; font-size: 22px; }
+.joy-rasm {
+  height: 170px;
+  background: #e5e7eb;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 70px;
+}
+.blok {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.blok h3 { font-size: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+
+.menyu-qator {
+  display: flex; justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.menyu-qator:last-child { border-bottom: none; }
+.holat-bor { color: var(--yashil); font-weight: 600; }
+.holat-yoq { color: var(--qizil); font-weight: 600; }
+
+.tugma {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: var(--yashil);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.tugma:hover { background: var(--yashil-toq); }
+.tugma small { display: block; font-weight: 400; font-size: 12px; opacity: .85; }
+
+.pastki {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  padding: 12px 16px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* ===== Noutbuk va kompyuter uchun (ekran 900px dan keng) ===== */
+@media (min-width: 900px) {
+  body { background: var(--fon); }
+  .ilova {
+    max-width: 1280px;
+    box-shadow: 0 0 30px rgba(0,0,0,.06);
+  }
+
+  .sarlavha {
+    padding: 28px 48px 34px;
+    border-radius: 0 0 28px 28px;
+  }
+  .logo { font-size: 36px; }
+  .logo-izoh { font-size: 13px; margin-bottom: 20px; }
+  .qidiruv { max-width: 640px; padding: 15px 18px; font-size: 16px; }
+  .orqaga { font-size: 20px; }
+
+  .bolim { padding: 28px 48px; }
+  .bolim h2 { font-size: 22px; margin-bottom: 18px; }
+
+  /* Kategoriyalar kattaroq */
+  .kategoriyalar { gap: 24px; overflow: visible; }
+  .kategoriya { flex: 0 0 130px; font-size: 14px; }
+  .kategoriya .belgi { width: 100px; height: 100px; font-size: 44px; border-radius: 22px; }
+
+  /* Joylar 3 ustunda */
+  #joylar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .karta { margin-bottom: 0; padding: 16px; }
+  .karta-rasm { width: 100px; height: 100px; font-size: 44px; }
+  .karta h3 { font-size: 18px; }
+
+  /* Joy sahifasi: grafik va menyu yonma-yon */
+  .joy-rasm { height: 200px; font-size: 90px; }
+  .bloklar {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .blok { padding: 20px; }
+
+  .pastki { max-width: 1280px; padding: 16px 48px; }
+  .pastki .tugma { max-width: 420px; margin-left: auto; }
+}
+
+/* O'rta ekranlar (planshet) — 2 ustun */
+@media (min-width: 900px) and (max-width: 1150px) {
+  #joylar { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===== Sarlavhadagi "Biznes uchun" havolasi ===== */
+.sarlavha-qator { display: flex; justify-content: space-between; align-items: center; }
+.biznes-havola {
+  color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
+  border: 1px solid rgba(255,255,255,.6); padding: 6px 12px; border-radius: 20px;
+}
+.biznes-havola:hover { background: rgba(255,255,255,.15); }
+
+/* ===== ADMIN PANEL ===== */
+.admin { max-width: 1280px; margin: 0 auto; min-height: 100vh; background: #fff; }
+.admin .sarlavha { border-radius: 0; }
+.admin-tanlov {
+  padding: 10px 12px; border-radius: 10px; border: none;
+  font-size: 15px; margin-top: 6px; min-width: 260px;
+}
+.statlar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+.stat {
+  background: var(--yashil-och); border-radius: 14px; padding: 16px;
+}
+.stat .raqam { font-size: 28px; font-weight: 800; color: var(--yashil); }
+.stat .nomi { font-size: 13px; color: var(--kulrang); }
+
+.hisoblagich { display: flex; align-items: center; gap: 16px; }
+.hisoblagich button {
+  width: 48px; height: 48px; border-radius: 12px; border: none;
+  background: var(--yashil); color: #fff; font-size: 26px; cursor: pointer;
+}
+.hisoblagich button:hover { background: var(--yashil-toq); }
+.hisoblagich .son { font-size: 32px; font-weight: 800; min-width: 110px; text-align: center; }
+
+.almashtirgich {
+  padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer;
+  font-weight: 600; font-size: 13px;
+}
+.almashtirgich.bor { background: var(--yashil-och); color: var(--yashil); }
+.almashtirgich.yoq { background: #fdecec; color: var(--qizil); }
+
+.xabar {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1f2937; color: #fff; padding: 12px 20px; border-radius: 12px;
+  opacity: 0; transition: .3s; pointer-events: none;
+}
+.xabar.korin { opacity: 1; }
+
+@media (min-width: 900px) {
+  .admin .bolim { padding: 28px 48px; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+}
+@media (max-width: 600px) {
+  .statlar { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .stat .raqam { font-size: 20px; }
+}

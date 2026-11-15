@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boshqaruv paneli — KUTMA Biznes</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="admin">
+    <header class="sarlavha">
+      <div class="sarlavha-qator">
+        <div class="logo">⏱ KUTMA <span style="font-size:16px;font-weight:600">Biznes</span></div>
+        <a class="biznes-havola" href="index.html">👀 Mijozlar sahifasi</a>
+      </div>
+      <div class="logo-izoh">BOSHQARUV PANELI</div>
+      <label>Joyingizni tanlang:</label><br>
+      <select id="joyTanlov" class="admin-tanlov"></select>
+    </header>
+
+    <section class="bolim">
+      <!-- Statistika -->
+      <div class="statlar">
+        <div class="stat"><div class="raqam" id="statBosh">-</div><div class="nomi" id="statBoshNomi">Bo'sh joylar</div></div>
+        <div class="stat"><div class="raqam" id="statBand">-</div><div class="nomi">Hozirgi bandlik</div></div>
+        <div class="stat"><div class="raqam" id="statMenyu">-</div><div class="nomi">Menyuda mavjud</div></div>
+      </div>
+
+      <div class="admin-grid">
+        <div>
+          <!-- Bo'sh joylar -->
+          <div class="blok">
+            <h3>Bo'sh joylar soni</h3>
+            <p class="izoh" style="margin-bottom:14px">Mijoz kelsa "−", ketsa "+" bosing. Bandlik foizi o'zi hisoblanadi.</p>
+            <div class="hisoblagich">
+              <button id="kamaytir">−</button>
+              <div class="son" id="boshSon">0</div>
+              <button id="kopaytir">+</button>
+            </div>
+          </div>
+
+          <!-- Grafik -->
+          <div class="blok">
+            <h3>Kunlik bandlik (soatlar bo'yicha)</h3>
+            <canvas id="grafik" height="150"></canvas>
+          </div>
+        </div>
+
+        <!-- Menyu -->
+        <div class="blok">
+          <h3>Jonli menyu <span class="izoh" style="font-weight:400">bosib o'zgartiring</span></h3>
+          <div id="menyu"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="xabar" id="xabar">✅ Saqlandi — mijozlar yangilanishni ko'rmoqda</div>
+
+  <script src="data.js"></script>
+  <script>
+    const KALIT = "kutma_ozgarishlar";
+    let joriy = JOYLAR[0];
+    let grafik = null;
+
+    // Joylar ro'yxatini select ga to'ldirish
+    const tanlov = document.getElementById("joyTanlov");
+    tanlov.innerHTML = JOYLAR.map(j => `<option value="${j.id}">${j.nomi}</option>`).join("");
+    tanlov.onchange = () => {
+      joriy = JOYLAR.find(j => j.id === Number(tanlov.value));
+      chiz();
+    };
+
+    // O'zgarishni brauzer xotirasiga saqlash
+    function saqla() {
+      joriy.band = Math.round((joriy.jami - joriy.bosh) / joriy.jami * 100);
+      let hammasi = {};
+      try { hammasi = JSON.parse(localStorage.getItem(KALIT) || "{}"); } catch (e) {}
+      hammasi[joriy.id] = { bosh: joriy.bosh, band: joriy.band, menyu: joriy.menyu };
+      try { localStorage.setItem(KALIT, JSON.stringify(hammasi)); } catch (e) {}
+
+      const x = document.getElementById("xabar");
+      x.classList.add("korin");
+      clearTimeout(x.t);
+      x.t = setTimeout(() => x.classList.remove("korin"), 1500);
+      chiz();
+    }
+
+    document.getElementById("kamaytir").onclick = () => {
+      if (joriy.bosh > 0) { joriy.bosh--; saqla(); }
+    };
+    document.getElementById("kopaytir").onclick = () => {
+      if (joriy.bosh < joriy.jami) { joriy.bosh++; saqla(); }
+    };
+
+    function chiz() {
+      // Statistika
+      const band = Math.round((joriy.jami - joriy.bosh) / joriy.jami * 100);
+      document.getElementById("statBosh").textContent = `${joriy.bosh}/${joriy.jami}`;
+      document.getElementById("statBoshNomi").textContent = joriy.birlik.replace("bo'sh ", "Bo'sh ") + "lar";
+      document.getElementById("statBand").textContent = band + "%";
+      const mavjud = joriy.menyu.filter(m => m.bor).length;
+      document.getElementById("statMenyu").textContent = `${mavjud}/${joriy.menyu.length}`;
+      document.getElementById("boshSon").textContent = `${joriy.bosh} / ${joriy.jami}`;
+
+      // Menyu
+      const menyu = document.getElementById("menyu");
+      menyu.innerHTML = joriy.menyu.map((m, i) => `
+        <div class="menyu-qator">
+          <span>${m.nomi} — ${m.narx.toLocaleString("uz")} so'm</span>
+          <button class="almashtirgich ${m.bor ? "bor" : "yoq"}" data-i="${i}">
+            ${m.bor ? "● Bor" : "○ Qolmagan"}
+          </button>
+        </div>`).join("");
+      menyu.querySelectorAll(".almashtirgich").forEach(b => {
+        b.onclick = () => {
+          const m = joriy.menyu[b.dataset.i];
+          m.bor = !m.bor;
+          saqla();
+        };
+      });
+
+      // Grafik
+      if (window.Chart) {
+        if (grafik) grafik.destroy();
+        grafik = new Chart(document.getElementById("grafik"), {
+          type: "bar",
+          data: {
+            labels: joriy.bandlik.map((_, i) => (10 + i) + ":00"),
+            datasets: [{ label: "Bandlik %", data: joriy.bandlik, backgroundColor: "#0b7d5f", borderRadius: 6 }]
+          },
+          options: { plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100 } } }
+        });
+      }
+    }
+
+    chiz();
+  </script>
+</body>
+</html>
